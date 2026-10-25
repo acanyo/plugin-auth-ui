@@ -1,0 +1,29 @@
+# Lets console users who manage plugins also manage login templates.
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-auth-ui-manage-templates
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "Plugins Management"
+    rbac.authorization.halo.run/display-name: "Auth UI Template Manage"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["system:plugins:manage"]
+    rbac.authorization.halo.run/dependencies: |
+      ["role-template-manage-plugins"]
+rules:
+  - apiGroups: ["authui.xhhao.com"]
+    resources: ["authtemplates"]
+    verbs: ["*"]
+  # Unsaved designs posted by the design studio for live preview.
+  - apiGroups: ["api.authui.xhhao.com"]
+    resources: ["previews"]
+    verbs: ["create"]
+  # The studio's AI assistant: availability and draft suggestions (nothing is saved).
+  - apiGroups: ["api.authui.xhhao.com"]
+    resources: ["assistant"]
+    verbs: ["list"]
+  - apiGroups: ["api.authui.xhhao.com"]
+    resources: ["suggestions"]
+    verbs: ["create"]

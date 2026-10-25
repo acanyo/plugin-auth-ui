@@ -1,0 +1,32 @@
+apiVersion: plugin.halo.run/v1alpha1
+kind: ExtensionDefinition
+metadata:
+  name: auth-ui-pages
+spec:
+  className: com.xhhao.authui.web.AuthPageFilter
+  extensionPointName: after-security-webfilter
+  displayName: 认证界面展示
+  description: 在 Halo 安全过滤器后复用原生认证处理器并替换展示模板。
+---
+apiVersion: plugin.halo.run/v1alpha1
+kind: ExtensionDefinition
+metadata:
+  name: auth-ui-head
+spec:
+  className: com.xhhao.authui.theme.AuthUiHeadProcessor
+  extensionPointName: template-head-processor
+  displayName: 站内认证弹窗
+  description: 在主题页面加载隔离的登录、注册弹窗。
+---
+apiVersion: plugin.halo.run/v1alpha1
+kind: ReverseProxy
+metadata:
+  name: auth-ui-assets
+rules:
+  - path: /auth/**
+    file:
+      directory: auth
+  # The design guide and agent skill offered on the console's AI page.
+  - path: /mcp/**
+    file:
+      directory: mcp

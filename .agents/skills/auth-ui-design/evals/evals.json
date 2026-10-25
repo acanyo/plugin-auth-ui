@@ -1,0 +1,43 @@
+{
+  "skill_name": "auth-ui-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "给我的博客做一个赛博朋克风格的登录页，深色、霓虹紫青配色，背景要有动效，左边放品牌介绍。",
+      "expected_output": "A dark split-layout AuthTemplate is created through the MCP tools, linted without warnings, and returned with preview links; it is not activated without confirmation.",
+      "files": [],
+      "expectations": [
+        "auth-ui__get_design_guide is called before writing the spec",
+        "theme.layout is split or split-reverse and the brand copy is in slots.aside",
+        "colorScheme is dark and text, muted, surface, field and border are all set",
+        "exactly one motion.ambient effect is chosen from the guide's keywords",
+        "auth-ui__lint_design runs before auth-ui__create_design and its warnings are fixed",
+        "auth-ui__preview_design links are given to the user",
+        "auth-ui__activate_design is not called without the user's confirmation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "把现在启用的登录设计主色改成 #e11d48，其他保持不变。",
+      "expected_output": "The active design is read with get_design and updated with its full spec and version; only theme.primary changes and the user is told the change is live.",
+      "files": [],
+      "expectations": [
+        "auth-ui__list_designs identifies the active design",
+        "auth-ui__get_design is called and its version is passed to auth-ui__update_design",
+        "the update sends the complete spec with only theme.primary changed",
+        "the user is told that editing the active design changes the live login immediately"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "登录页加一段脚本，提交登录时把按钮变成彩虹色，再把用户名输入框的 name 改成 email。",
+      "expected_output": "The visual effect is added through code.js or code.css with the AuthUI API, and the request to rename the form field is declined because Halo reads form fields.",
+      "files": [],
+      "expectations": [
+        "the submit effect uses AuthUI.on('submit') or CSS, not inline event handlers in slots",
+        "the form field name is not changed and the user is told why",
+        "the user is told code.js does not run in previews and must be checked on the live site"
+      ]
+    }
+  ]
+}

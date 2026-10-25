@@ -1,0 +1,288 @@
+/*
+ * Base look for every design. A design overrides the custom properties below through its visual
+ * settings (written as #auth-ui{...} after this file) and its own scoped CSS.
+ * Defaults keyed on data attributes use :where() so a design's values always win.
+ */
+html, body { margin: 0; min-height: 100%; }
+#auth-ui {
+  --auth-primary: #176b62; --auth-on-primary: #fff; --auth-card: #fff; --auth-text: #17201f;
+  --auth-muted: #66706e; --auth-border: #e2e7e6; --auth-field: #f7f9f9;
+  --auth-bg-1: #eef4f3; --auth-bg-2: #dcebe8; --auth-bg-3: #f3eee6; --auth-bg-angle: 140deg;
+  --auth-page: linear-gradient(var(--auth-bg-angle), var(--auth-bg-1), var(--auth-bg-2));
+  --auth-story: var(--auth-primary);
+  --auth-radius: 22px; --auth-width: 380px; --auth-shadow: 0 24px 80px rgb(15 40 37 / 0.12);
+  --auth-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --auth-speed: 1; --auth-ease: cubic-bezier(.2, .8, .2, 1);
+  --auth-ring: color-mix(in srgb, var(--auth-primary) 22%, transparent);
+  position: relative; isolation: isolate; box-sizing: border-box; min-height: 100svh;
+  padding: clamp(20px, 5vw, 72px); display: grid; place-items: center; overflow: hidden;
+  color: var(--auth-text); background: var(--auth-page); background-size: cover;
+  font: 15px/1.6 var(--auth-font); color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+}
+#auth-ui *, #auth-ui *::before, #auth-ui *::after { box-sizing: border-box; }
+#auth-ui a { color: var(--auth-primary); text-decoration: none; transition: color .15s, opacity .15s; }
+#auth-ui a:hover { text-decoration: underline; text-underline-offset: 4px; }
+#auth-ui :focus-visible { outline: 2px solid var(--auth-primary); outline-offset: 3px; }
+
+/* Colour schemes: dark tokens apply unless the design sets its own colours. */
+#auth-ui:where([data-scheme=dark]) {
+  --auth-card: #14181d; --auth-text: #eef1f4; --auth-muted: #9aa3ad; --auth-border: #2a3139;
+  --auth-field: #1b2027; --auth-bg-1: #0d1116; --auth-bg-2: #141b22; --auth-bg-3: #1d1630;
+  --auth-shadow: 0 30px 100px rgb(0 0 0 / 0.5); color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  #auth-ui:where([data-scheme=system]) {
+    --auth-card: #14181d; --auth-text: #eef1f4; --auth-muted: #9aa3ad; --auth-border: #2a3139;
+    --auth-field: #1b2027; --auth-bg-1: #0d1116; --auth-bg-2: #141b22; --auth-bg-3: #1d1630;
+    --auth-shadow: 0 30px 100px rgb(0 0 0 / 0.5); color-scheme: dark;
+  }
+}
+#auth-ui:where([data-speed=slow]) { --auth-speed: 1.6; }
+#auth-ui:where([data-speed=fast]) { --auth-speed: .6; }
+
+/* Backgrounds. Solid and gradient set --auth-page directly; these compose the rest. */
+#auth-ui:where([data-bg=mesh]) {
+  --auth-page:
+    radial-gradient(60% 70% at 15% 15%, color-mix(in srgb, var(--auth-bg-1) 90%, transparent), transparent 70%),
+    radial-gradient(55% 60% at 85% 20%, color-mix(in srgb, var(--auth-bg-2) 85%, transparent), transparent 70%),
+    radial-gradient(70% 70% at 50% 100%, color-mix(in srgb, var(--auth-bg-3) 85%, transparent), transparent 70%),
+    var(--auth-card);
+}
+#auth-ui:where([data-bg=aurora]) { --auth-page: var(--auth-bg-1); }
+.auth-backdrop { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+#auth-ui[data-bg=image] .auth-backdrop::before {
+  content: ""; position: absolute; inset: calc(var(--auth-page-blur, 0px) * -2);
+  background: var(--auth-page-image, none) center / cover no-repeat;
+  filter: blur(var(--auth-page-blur, 0px));
+}
+#auth-ui[data-bg=image] .auth-backdrop::after {
+  content: ""; position: absolute; inset: 0; background: rgb(0 0 0 / var(--auth-page-overlay, .25));
+}
+.auth-blob, .auth-particles { position: absolute; display: none; }
+.auth-blob { width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(70px); opacity: .55; will-change: transform; }
+.auth-blob-1 { left: -12vmax; top: -14vmax; background: var(--auth-bg-2); }
+.auth-blob-2 { right: -14vmax; top: 10vmax; background: var(--auth-bg-3); }
+.auth-blob-3 { left: 20vmax; bottom: -20vmax; background: color-mix(in srgb, var(--auth-primary) 55%, var(--auth-bg-2)); }
+
+/* Ambient motion. */
+#auth-ui[data-ambient=gradient] { background-size: 260% 260%; animation: auth-pan calc(18s * var(--auth-speed)) ease-in-out infinite alternate; }
+#auth-ui:is([data-ambient=float], [data-ambient=aurora], [data-bg=aurora]) .auth-blob { display: block; }
+#auth-ui[data-ambient=float] .auth-blob { animation: auth-float calc(16s * var(--auth-speed)) ease-in-out infinite alternate; }
+#auth-ui[data-ambient=float] .auth-blob-2 { animation-delay: calc(-5s * var(--auth-speed)); }
+#auth-ui[data-ambient=float] .auth-blob-3 { animation-delay: calc(-10s * var(--auth-speed)); }
+#auth-ui:is([data-ambient=aurora], [data-bg=aurora]) .auth-blob { filter: blur(90px); opacity: .75; mix-blend-mode: screen; animation: auth-aurora calc(22s * var(--auth-speed)) ease-in-out infinite alternate; }
+#auth-ui:is([data-ambient=aurora], [data-bg=aurora]) .auth-blob-2 { animation-duration: calc(28s * var(--auth-speed)); animation-direction: alternate-reverse; }
+#auth-ui:is([data-ambient=aurora], [data-bg=aurora]) .auth-blob-3 { animation-duration: calc(34s * var(--auth-speed)); }
+#auth-ui[data-ambient=particles] .auth-particles {
+  display: block; inset: -50% 0 0; opacity: .5;
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--auth-primary) 70%, transparent) 1.5px, transparent 2px),
+    radial-gradient(circle, color-mix(in srgb, var(--auth-text) 30%, transparent) 1px, transparent 1.5px);
+  background-size: 120px 120px, 70px 70px; background-position: 0 0, 35px 45px;
+  animation: auth-rise calc(40s * var(--auth-speed)) linear infinite;
+}
+
+/* Shell and card. */
+#auth-ui .auth-shell {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr);
+  width: min(100%, calc(var(--auth-width) + 112px)); overflow: hidden;
+  border-radius: var(--auth-radius); background: var(--auth-card); box-shadow: var(--auth-shadow);
+}
+#auth-ui .auth-story { display: none; }
+#auth-ui .auth-card { position: relative; display: flex; flex-direction: column; min-width: 0; padding: clamp(28px, 4.5vw, 56px); background: var(--auth-card); }
+#auth-ui :is(.auth-heading, .auth-forms, .auth-switch, .auth-footer, .auth-closed, .auth-slot) { width: 100%; max-width: var(--auth-width); margin-inline: auto; }
+#auth-ui .auth-brand { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 30px; color: var(--auth-text); font-size: 14px; font-weight: 600; }
+#auth-ui .auth-brand:hover { text-decoration: none; opacity: .8; }
+#auth-ui .auth-brand img { width: 34px; height: 34px; border-radius: 10px; object-fit: cover; }
+#auth-ui .auth-monogram { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: var(--auth-on-primary); background: var(--auth-primary); font-weight: 700; }
+#auth-ui h1 { margin: 0; font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: -.03em; }
+#auth-ui .auth-lead { margin: 8px 0 28px; color: var(--auth-muted); font-size: 14px; }
+
+/* Layouts. */
+#auth-ui:is([data-layout=split], [data-layout=split-reverse]) .auth-shell { grid-template-columns: minmax(280px, .95fr) minmax(0, 1fr); width: min(100%, 1080px); }
+#auth-ui[data-layout=split-reverse] .auth-story { order: 2; }
+#auth-ui:is([data-layout=split], [data-layout=split-reverse]) .auth-story {
+  position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+  min-height: min(620px, calc(100svh - 2 * clamp(20px, 5vw, 72px))); padding: clamp(28px, 4vw, 56px); overflow: hidden; color: #fff;
+  background: linear-gradient(160deg, rgb(255 255 255 / .08), rgb(0 0 0 / .18)), var(--auth-story-image, none) center / cover, var(--auth-story);
+}
+#auth-ui[data-layout=fullscreen] { padding: 0; place-items: stretch start; }
+#auth-ui[data-layout=fullscreen] .auth-shell {
+  width: min(100%, calc(var(--auth-width) + 160px)); min-height: 100svh; border-radius: 0;
+  background: color-mix(in srgb, var(--auth-card) 86%, transparent); backdrop-filter: blur(24px) saturate(1.3);
+}
+#auth-ui[data-layout=fullscreen] .auth-card { justify-content: center; background: transparent; }
+
+/* Brand panel content and decorations. */
+#auth-ui .auth-site { position: relative; font-size: 18px; font-weight: 700; letter-spacing: .01em; }
+#auth-ui .auth-story-copy { position: relative; margin: 0; max-width: 9em; font-size: clamp(28px, 3.2vw, 40px); font-weight: 650; line-height: 1.35; letter-spacing: -.03em; overflow-wrap: anywhere; }
+#auth-ui .auth-story-footer { position: relative; font-size: 12px; opacity: .72; }
+#auth-ui .auth-story-content { position: relative; display: flex; flex-direction: column; gap: 18px; height: 100%; min-height: 0; }
+#auth-ui .auth-story-content .auth-spacer { min-height: 24px; }
+#auth-ui .auth-story-art { position: absolute; inset: 0; pointer-events: none; }
+#auth-ui .auth-story-art > span { position: absolute; display: none; }
+#auth-ui:where([data-decoration=orbit]) .auth-orbit { display: block; right: -60px; bottom: 40px; width: 320px; height: 320px; }
+#auth-ui .auth-orbit span { position: absolute; inset: 0; border: 1px solid rgb(255 255 255 / .28); border-radius: 50%; animation: auth-spin calc(30s * var(--auth-speed)) linear infinite; }
+#auth-ui .auth-orbit span:nth-child(2) { inset: 40px; border-style: dashed; animation-duration: calc(22s * var(--auth-speed)); animation-direction: reverse; }
+#auth-ui .auth-orbit span:nth-child(3) { inset: 90px; background: radial-gradient(circle, rgb(255 255 255 / .22), transparent 70%); animation: auth-pulse calc(5s * var(--auth-speed)) ease-in-out infinite; }
+#auth-ui:where([data-decoration=grid]) .auth-grid {
+  display: block; inset: 0;
+  background-image: linear-gradient(rgb(255 255 255 / .12) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / .12) 1px, transparent 1px);
+  background-size: 36px 36px; mask-image: radial-gradient(circle at 70% 75%, #000, transparent 65%);
+  animation: auth-grid calc(20s * var(--auth-speed)) linear infinite;
+}
+#auth-ui:where([data-decoration=waves]) .auth-waves { display: block; left: -10%; right: -10%; bottom: 0; height: 45%; }
+#auth-ui .auth-waves span { position: absolute; left: 0; right: 0; bottom: -60%; height: 140%; border-radius: 43%; background: rgb(255 255 255 / .1); animation: auth-spin calc(18s * var(--auth-speed)) linear infinite; }
+#auth-ui .auth-waves span + span { bottom: -66%; background: rgb(255 255 255 / .08); animation-duration: calc(26s * var(--auth-speed)); }
+
+/* Halo's native form fragments. */
+#auth-ui .halo-form { width: 100%; margin: 0; }
+#auth-ui .form-item { margin: 0 0 18px; }
+#auth-ui label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 600; }
+#auth-ui .form-input { position: relative; display: flex; align-items: center; flex: 1; min-width: 0; }
+#auth-ui input:not([type=hidden]):not([type=checkbox]):not([type=radio]), #auth-ui select {
+  width: 100%; min-width: 0; height: 46px; padding: 10px 14px; border: 1px solid var(--auth-border); border-radius: 12px;
+  background: var(--auth-field); color: var(--auth-text); font: inherit; font-size: 15px;
+  transition: border-color .2s, box-shadow .2s, background-color .2s, transform .2s var(--auth-ease);
+}
+#auth-ui input::placeholder { color: color-mix(in srgb, var(--auth-muted) 75%, transparent); }
+#auth-ui input:hover:not(:focus) { border-color: color-mix(in srgb, var(--auth-primary) 30%, var(--auth-border)); }
+#auth-ui input:focus { border-color: var(--auth-primary); outline: none; box-shadow: 0 0 0 4px var(--auth-ring); background: var(--auth-card); }
+#auth-ui input[type=checkbox] { width: 16px; height: 16px; margin: 0; flex-shrink: 0; accent-color: var(--auth-primary); }
+#auth-ui :is(.form-label-group, .form-item-compact) { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+#auth-ui .form-label-group { justify-content: space-between; margin-bottom: 7px; }
+#auth-ui :is(.form-label-group, .form-item-compact) label { margin: 0; }
+#auth-ui .form-item-compact label { font-weight: 500; color: var(--auth-muted); }
+#auth-ui .form-item-extra-link { font-size: 12px; }
+#auth-ui button { border: 0; font: inherit; cursor: pointer; }
+#auth-ui button[type=submit] {
+  position: relative; overflow: hidden; width: 100%; min-height: 48px; padding: 12px 16px; border-radius: 12px;
+  background: var(--auth-primary); color: var(--auth-on-primary); font-weight: 650; letter-spacing: .01em;
+  box-shadow: 0 8px 24px -10px var(--auth-primary);
+  transition: transform .2s var(--auth-ease), box-shadow .2s, filter .2s;
+}
+#auth-ui button[type=submit]:hover { filter: brightness(1.06); }
+#auth-ui button:disabled { cursor: wait; opacity: .65; }
+#auth-ui .toggle-password-button { position: absolute; right: 8px; display: flex; padding: 7px; border-radius: 8px; background: transparent; color: var(--auth-muted); }
+#auth-ui .toggle-password-button:hover { background: color-mix(in srgb, var(--auth-text) 6%, transparent); }
+#auth-ui .toggle-password-button svg { width: 18px; height: 18px; }
+#auth-ui .toggle-password-display-flag input { padding-right: 44px !important; }
+#auth-ui .form-input-group { display: flex; align-items: center; gap: 8px; }
+#auth-ui .form-input-group button { flex-shrink: 0; min-height: 46px; padding: 0 14px; border: 1px solid var(--auth-border); border-radius: 12px; background: var(--auth-field); color: var(--auth-primary); font-weight: 600; white-space: nowrap; transition: background-color .2s, border-color .2s; }
+#auth-ui .form-input-group button:hover { border-color: var(--auth-primary); }
+#auth-ui .alert { position: relative; margin: 0 0 16px; padding: 11px 14px 11px 40px; border-radius: 12px; background: color-mix(in srgb, var(--auth-primary) 9%, transparent); color: var(--auth-text); font-size: 13px; overflow-wrap: anywhere; }
+#auth-ui .alert::before { content: ""; position: absolute; left: 14px; top: 13px; width: 16px; height: 16px; border-radius: 50%; background: var(--auth-primary); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 5h2v6h-2V7Zm0 8h2v2h-2v-2Z'/%3E%3C/svg%3E") center/16px; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 5h2v6h-2V7Zm0 8h2v2h-2v-2Z'/%3E%3C/svg%3E") center/16px; }
+#auth-ui .alert-error { background: #d9483b14; color: #c0392b; }
+#auth-ui .alert-error::before { background: #d9483b; }
+#auth-ui :where([data-scheme=dark]) .alert-error, #auth-ui:where([data-scheme=dark]) .alert-error { color: #ff9a8f; }
+#auth-ui .alert strong { font-weight: 550; }
+#auth-ui .form-item .alert-error { margin: 8px 0 0; padding: 8px 12px 8px 34px; animation: auth-shake .4s var(--auth-ease); }
+#auth-ui .form-item .alert-error::before { left: 12px; top: 10px; width: 14px; height: 14px; }
+#auth-ui .divider-wrapper { display: flex; align-items: center; gap: 12px; margin: 24px 0 16px; color: var(--auth-muted); font-size: 12px; }
+#auth-ui hr { flex: 1; border: 0; border-top: 1px solid var(--auth-border); }
+#auth-ui .pill-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; list-style: none; padding: 0; margin: 0; }
+/* Social providers are submit buttons inside Halo's forms; they must not look like the main button. */
+#auth-ui .pill-items :is(a, button) { box-shadow: none; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; padding: 9px 10px; border: 1px solid var(--auth-border); border-radius: 12px; background: var(--auth-card); color: var(--auth-text); font-size: 13px; font-weight: 550; transition: transform .2s var(--auth-ease), border-color .2s, box-shadow .2s; }
+#auth-ui .pill-items :is(a, button):hover { text-decoration: none; border-color: color-mix(in srgb, var(--auth-primary) 40%, var(--auth-border)); }
+#auth-ui .pill-items img { width: 20px; height: 20px; object-fit: contain; }
+#auth-ui .auth-switch { margin-top: 24px; margin-bottom: 8px; text-align: center; font-size: 13px; color: var(--auth-muted); }
+#auth-ui .auth-switch a { margin-left: 4px; font-weight: 650; }
+#auth-ui .auth-closed { padding: 16px; border: 1px dashed var(--auth-border); border-radius: 12px; color: var(--auth-muted); text-align: center; }
+#auth-ui .auth-footer { margin-top: auto; padding-top: 18px; font-size: 12px; text-align: center; }
+#auth-ui .auth-footer a { color: var(--auth-muted); }
+#auth-ui .auth-logout .user-info { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding: 14px; border: 1px solid var(--auth-border); border-radius: 14px; background: var(--auth-field); }
+#auth-ui .auth-logout .user-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+#auth-ui .auth-logout .user-details { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--auth-muted); }
+#auth-ui .auth-logout .user-name { font-weight: 650; color: var(--auth-text); overflow-wrap: anywhere; }
+#auth-ui .auth-logout .cancel-link { display: block; text-align: center; font-size: 13px; color: var(--auth-muted); }
+#auth-ui[data-view=logout] .auth-home { display: none; }
+#auth-ui[data-auto-submit=true] .auth-logout { visibility: hidden; }
+#auth-ui[data-auto-submit=true] .auth-lead::after { content: " 正在退出…"; }
+
+/* Design slots and the utility classes designs can use in them. */
+#auth-ui .auth-slot { position: relative; }
+#auth-ui .auth-slot-header { margin-bottom: 18px; }
+#auth-ui .auth-slot-footer { margin-top: 16px; color: var(--auth-muted); font-size: 12px; text-align: center; }
+#auth-ui :is(.auth-slot, .auth-story-content) :is(h2, h3, p) { margin: 0; }
+#auth-ui .auth-chip { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 4px 10px; border-radius: 999px; background: color-mix(in srgb, currentColor 12%, transparent); font-size: 12px; font-weight: 600; }
+#auth-ui .auth-features { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+#auth-ui .auth-features li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.6; }
+#auth-ui .auth-features li::before { content: ""; flex-shrink: 0; width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; background: color-mix(in srgb, currentColor 18%, transparent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12 4 4 8-8'/%3E%3C/svg%3E") center/12px no-repeat; }
+#auth-ui .auth-quote { margin: 0; padding-left: 16px; border-left: 3px solid currentColor; font-size: 15px; line-height: 1.8; opacity: .9; }
+#auth-ui .auth-stats { display: flex; gap: 28px; }
+#auth-ui .auth-stats strong { display: block; font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+#auth-ui .auth-stats span { font-size: 12px; opacity: .75; }
+#auth-ui .auth-big { font-size: clamp(28px, 3.2vw, 42px); font-weight: 700; line-height: 1.25; letter-spacing: -.03em; }
+#auth-ui .auth-gradient-text { background: linear-gradient(120deg, currentColor, color-mix(in srgb, currentColor 40%, var(--auth-primary))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+#auth-ui .auth-spacer { flex: 1; }
+
+/* Entrance animations for the whole card. */
+#auth-ui:not([data-entrance=none]) .auth-shell { animation: auth-enter-rise calc(.7s * var(--auth-speed)) var(--auth-ease) both; }
+#auth-ui[data-entrance=fade] .auth-shell { animation-name: auth-enter-fade; }
+#auth-ui[data-entrance=zoom] .auth-shell { animation-name: auth-enter-zoom; }
+#auth-ui[data-entrance=slide] .auth-shell { animation-name: auth-enter-slide; }
+#auth-ui[data-entrance=flip] .auth-shell { animation-name: auth-enter-flip; transform-origin: 50% 0; }
+#auth-ui:not([data-entrance=none]) .auth-story > * { animation: auth-enter-fade calc(.9s * var(--auth-speed)) var(--auth-ease) both; animation-delay: calc(.25s * var(--auth-speed)); }
+
+/* Staggered reveal of headings, fields and links; page.js numbers them with --i. */
+#auth-ui[data-stagger=true] .auth-stagger { animation: auth-item calc(.55s * var(--auth-speed)) var(--auth-ease) both; animation-delay: calc((var(--i, 0) * 55ms + 140ms) * var(--auth-speed)); }
+/* Elements in design slots with data-animate; page.js applies data-delay in ms. */
+#auth-ui [data-animate] { animation: auth-item calc(.7s * var(--auth-speed)) var(--auth-ease) both; animation-delay: var(--auth-delay, 0ms); }
+#auth-ui [data-animate=fade] { animation-name: auth-enter-fade; }
+#auth-ui [data-animate=zoom] { animation-name: auth-enter-zoom; }
+#auth-ui [data-animate=slide] { animation-name: auth-enter-slide; }
+#auth-ui [data-animate=float] { animation: auth-bob calc(6s * var(--auth-speed)) ease-in-out infinite; }
+
+/* Interactive feedback on inputs, buttons and providers. */
+#auth-ui[data-interactive=true] input:focus { transform: translateY(-1px); }
+#auth-ui[data-interactive=true] button[type=submit]:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 14px 30px -12px var(--auth-primary); }
+#auth-ui[data-interactive=true] button[type=submit]:active:not(:disabled) { transform: translateY(0) scale(.985); }
+#auth-ui[data-interactive=true] button[type=submit]::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-120%);
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / .35) 50%, transparent 70%);
+}
+#auth-ui[data-interactive=true] button[type=submit]:hover:not(:disabled)::after { transform: translateX(120%); transition: transform .8s var(--auth-ease); }
+#auth-ui[data-interactive=true] .pill-items :is(a, button):hover { transform: translateY(-2px); box-shadow: 0 10px 22px -14px rgb(0 0 0 / .35); }
+#auth-ui button[type=submit][aria-busy=true]::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 8px; vertical-align: -2px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: auth-spin .7s linear infinite; }
+
+/* Inside the site modal: one column, no page chrome, height follows the content. */
+/* The modal frame paints the card colour, so the page itself stays transparent. */
+html:has(#auth-ui[data-embedded=true]), html:has(#auth-ui[data-embedded=true]) body { min-height: 0; background: transparent; }
+#auth-ui[data-embedded=true] { min-height: 0; padding: 0; overflow: visible; background: transparent; animation: none; }
+#auth-ui[data-embedded=true] .auth-backdrop, #auth-ui[data-embedded=true] .auth-story, #auth-ui[data-embedded=true] .auth-footer { display: none; }
+#auth-ui[data-embedded=true] .auth-shell { width: 100%; min-height: 0; border-radius: 0; box-shadow: none; grid-template-columns: minmax(0, 1fr); background: transparent; backdrop-filter: none; animation: none; }
+#auth-ui[data-embedded=true] .auth-card { padding: 30px 30px 26px; }
+/* Leave room for the modal's close button beside the brand. */
+#auth-ui[data-embedded=true] .auth-brand { margin-bottom: 22px; padding-right: 44px; }
+#auth-ui[data-embedded=true] .auth-switch { margin-bottom: 0; }
+
+@media (max-width: 760px) {
+  #auth-ui { padding: 16px 12px; place-items: center; }
+  #auth-ui .auth-shell, #auth-ui:is([data-layout=split], [data-layout=split-reverse]) .auth-shell { grid-template-columns: minmax(0, 1fr); width: min(100%, 520px); }
+  #auth-ui:is([data-layout=split], [data-layout=split-reverse]) .auth-story { display: none; }
+  #auth-ui[data-layout=fullscreen] .auth-shell { width: 100%; }
+  #auth-ui .auth-card { padding: 32px 22px; }
+  #auth-ui[data-embedded=true] .auth-card { padding: 30px 20px calc(20px + env(safe-area-inset-bottom)); }
+  #auth-ui h1 { font-size: 24px; }
+}
+
+@keyframes auth-enter-rise { from { opacity: 0; transform: translateY(26px) scale(.985); } }
+@keyframes auth-enter-fade { from { opacity: 0; } }
+@keyframes auth-enter-zoom { from { opacity: 0; transform: scale(.92); } }
+@keyframes auth-enter-slide { from { opacity: 0; transform: translateX(-40px); } }
+@keyframes auth-enter-flip { from { opacity: 0; transform: perspective(1200px) rotateX(-14deg) translateY(16px); } }
+@keyframes auth-item { from { opacity: 0; transform: translateY(12px); } }
+@keyframes auth-pan { from { background-position: 0% 30%; } to { background-position: 100% 70%; } }
+@keyframes auth-float { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(6vmax, 4vmax, 0) scale(1.12); } }
+@keyframes auth-aurora { 0% { transform: translate3d(0, 0, 0) rotate(0) scale(1); } 50% { transform: translate3d(8vmax, -4vmax, 0) rotate(40deg) scale(1.2); } 100% { transform: translate3d(-6vmax, 6vmax, 0) rotate(90deg) scale(.95); } }
+@keyframes auth-rise { to { transform: translateY(33%); } }
+@keyframes auth-spin { to { transform: rotate(360deg); } }
+@keyframes auth-pulse { 50% { transform: scale(1.12); opacity: .6; } }
+@keyframes auth-grid { to { background-position: 36px 36px; } }
+@keyframes auth-bob { 50% { transform: translateY(-10px); } }
+@keyframes auth-shake { 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  #auth-ui, #auth-ui *, #auth-ui *::before, #auth-ui *::after { animation: none !important; transition: none !important; }
+}

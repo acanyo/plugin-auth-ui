@@ -1,0 +1,31 @@
+# Refer https://docs.halo.run/developer-guide/plugin/basics/manifest
+
+apiVersion: plugin.halo.run/v1alpha1
+kind: Plugin
+metadata:
+  # The name defines how the plugin is invoked, A unique name
+  name: auth-ui
+  annotations:
+    # AI Foundation and MCP Server unlock the AI design features.
+    store.halo.run/recommended-apps: '["app-acslk9nu", "app-ybv96zol"]'
+spec:
+  enabled: true
+  requires: ">=2.27.0"
+  # Optional: MCP Server lets AI agents design login pages; AI Foundation powers the studio's AI assistant.
+  pluginDependencies:
+    mcp-server?: ">=1.3.0 & <2.0.0"
+    ai-foundation?: ">=1.3.0 & <2.0.0"
+  author:
+    name: Handsome
+    website: https://xhhao.com
+  logo: logo.png
+  homepage: https://xhhao.com
+  repo: https://github.com/acanyo/plugin-auth-ui
+  issues: https://github.com/acanyo/plugin-auth-ui/issues
+  displayName: "认证界面"
+  description: "配置全站登录、注册页面与站内认证弹窗，沿用 Halo 原生认证流程。"
+  # Settings are edited on the plugin's own console page (/console/auth-ui), not a Setting form.
+  configMapName: auth-ui-config
+  license:
+    - name: "GPL-3.0"
+      url: "https://github.com/acanyo/plugin-auth-ui/blob/main/LICENSE"

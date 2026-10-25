@@ -1,0 +1,257 @@
+/* AI design page: a setup checklist beside the tool list. */
+.au-mcp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 24px;
+  align-items: start;
+}
+/* Grid items default to their min-content width, so long code lines would widen the page. */
+.au-mcp > *,
+.au-mcp-steps > * {
+  min-width: 0;
+}
+.au-mcp-steps {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.au-mcp-step {
+  display: flex;
+  gap: 16px;
+  padding: 22px 24px;
+  border: 1px solid var(--au-border);
+  border-radius: var(--au-radius);
+  background: var(--au-bg);
+  transition: border-color 160ms;
+}
+.au-mcp-step[data-done='true'] {
+  border-color: color-mix(in srgb, var(--au-accent) 35%, var(--au-border));
+}
+.au-mcp-step-mark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--au-subtle);
+  color: var(--au-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.au-mcp-step[data-done='true'] .au-mcp-step-mark {
+  background: var(--au-success-bg);
+  color: var(--au-accent);
+  animation: au-mcp-pop 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.au-mcp-step-body {
+  flex: 1;
+  min-width: 0;
+}
+.au-mcp-step-body > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 28px;
+}
+.au-mcp-step h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+.au-mcp-step-body > p {
+  margin-top: 6px;
+  color: var(--au-muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.au-mcp-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--au-muted);
+  font-size: 12px;
+}
+.au-mcp-state::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--au-faint);
+}
+.au-mcp-state[data-state='ready'] {
+  color: var(--au-accent);
+}
+.au-mcp-state[data-state='ready']::before {
+  background: var(--au-accent);
+}
+.au-mcp-state[data-state='failed'],
+.au-mcp-state[data-state='unknown'] {
+  color: var(--au-danger);
+}
+.au-mcp-state[data-state='failed']::before,
+.au-mcp-state[data-state='unknown']::before {
+  background: var(--au-danger);
+}
+.au-mcp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.au-mcp-code {
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid var(--au-border);
+  border-radius: var(--au-control-radius);
+  background: var(--au-sidebar);
+}
+.au-mcp-code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 40px;
+  padding: 5px 6px 5px 12px;
+  border-bottom: 1px solid var(--au-border);
+  color: var(--au-muted);
+  font-size: 12px;
+}
+.au-mcp-code pre {
+  margin: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+}
+.au-mcp-code-note {
+  padding: 0 14px 12px;
+  color: var(--au-muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.au-mcp-card .au-mcp-code-note {
+  padding: 12px 0 0;
+}
+.au-workbench .au-mcp code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.au-workbench .au-copy {
+  gap: 5px;
+  padding: 5px 8px;
+  font-size: 12px;
+}
+.au-mcp-side {
+  display: grid;
+  gap: 12px;
+}
+.au-mcp-card {
+  padding: 20px;
+}
+.au-mcp-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.au-mcp-card h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+.au-mcp-card .au-notice {
+  margin-bottom: 12px;
+}
+.au-mcp-tools,
+.au-mcp-prompts {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.au-mcp-tools li {
+  padding: 10px 0;
+  border-top: 1px solid var(--au-border);
+}
+.au-mcp-tools li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.au-mcp-tools li > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.au-mcp-tools strong {
+  font-size: 13px;
+  font-weight: 550;
+}
+.au-mcp-tools code {
+  display: block;
+  margin-top: 2px;
+  color: var(--au-faint);
+  font-size: 11px;
+}
+.au-mcp-tools p {
+  margin-top: 4px;
+  color: var(--au-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.au-mcp-tag {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--au-subtle);
+  color: var(--au-muted);
+  font-size: 10px;
+  line-height: 18px;
+}
+.au-mcp-tag.is-danger {
+  background: var(--au-danger-bg);
+  color: var(--au-danger);
+}
+.au-mcp-prompts {
+  gap: 8px;
+}
+.au-mcp-prompts li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 6px 10px 12px;
+  border-radius: var(--au-control-radius);
+  background: var(--au-sidebar);
+}
+.au-mcp-prompts p {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.au-workbench .au-spin {
+  animation: au-mcp-spin 0.8s linear infinite;
+}
+@keyframes au-mcp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes au-mcp-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+@container auth-ui-workbench (max-width: 980px) {
+  .au-mcp {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@container auth-ui-workbench (max-width: 600px) {
+  .au-mcp-step {
+    padding: 18px 16px;
+    gap: 12px;
+  }
+}

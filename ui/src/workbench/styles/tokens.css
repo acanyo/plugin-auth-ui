@@ -1,0 +1,91 @@
+/* Neutral palette and control proportions shared with the summaraidGPT and lingui workbenches. */
+.au-workbench,
+.au-dialog {
+  --au-bg: #ffffff;
+  --au-sidebar: #f9f9f9;
+  --au-subtle: #f4f4f4;
+  --au-hover: #eeeeee;
+  --au-text: #0d0d0d;
+  --au-muted: #646464;
+  --au-faint: #8f8f8f;
+  --au-border: #e5e5e5;
+  --au-accent: #267566;
+  --au-success-bg: #f0f7f4;
+  --au-danger: #b42318;
+  --au-danger-bg: #fff5f4;
+  --au-radius: 12px;
+  --au-control-radius: 10px;
+  color: var(--au-text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+:where(.dark, [data-theme='dark'], [data-color-scheme='dark']) :is(.au-workbench, .au-dialog) {
+  --au-bg: #212121;
+  --au-sidebar: #171717;
+  --au-subtle: #2f2f2f;
+  --au-hover: #383838;
+  --au-text: #ececec;
+  --au-muted: #a0a0a0;
+  --au-faint: #898989;
+  --au-border: #3a3a3a;
+  --au-accent: #89c7b2;
+  --au-success-bg: #253a32;
+  --au-danger: #ff938a;
+  --au-danger-bg: #3e2827;
+}
+
+.au-workbench *,
+.au-dialog * {
+  box-sizing: border-box;
+}
+.au-workbench :is(h1, h2, h3, p, ul) {
+  margin: 0;
+}
+.au-workbench :focus-visible,
+.au-dialog :focus-visible {
+  outline: 2px solid var(--au-muted);
+  outline-offset: 3px;
+}
+.au-workbench .au-muted {
+  color: var(--au-muted);
+  font-size: 12px;
+}
+.au-workbench .au-status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--au-faint);
+}
+.au-workbench .au-status-dot.is-ready {
+  background: var(--au-accent);
+}
+.au-workbench .au-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--au-border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  background: var(--au-sidebar);
+  color: var(--au-muted);
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.au-workbench .au-notice > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .au-workbench *,
+  .au-dialog * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title th:text="${authUiCopy.title + ' - ' + site.title}">账号</title>
+  <th:block th:replace="~{plugin:system:gateway_fragments/common::basicScriptResources}" />
+  <link rel="stylesheet" href="/plugins/auth-ui/assets/auth/page.css?v=10" />
+  <!-- Design values are validated on the server; design CSS is scoped to #auth-ui with "<" escaped. -->
+  <style id="auth-ui-theme" th:if="${!#strings.isEmpty(authUiTemplate.variables)}" th:utext="${'#auth-ui{' + authUiTemplate.variables + '}'}"></style>
+  <style id="auth-ui-template" th:if="${!#strings.isEmpty(authUiTemplate.css)}" th:utext="${authUiTemplate.css}"></style>
+  <script th:inline="javascript">
+    window.authUiPreview = /*[[${authUiPreview == true}]]*/ false;
+    window.authUiAutoSubmit = /*[[${authUiAutoSubmit == true}]]*/ false;
+  </script>
+  <script defer src="/plugins/auth-ui/assets/auth/page.js?v=10"></script>
+</head>
+<body>
+  <main id="auth-ui"
+    th:attr="data-template=${authUiTemplate.name},data-view=${authUiView},data-layout=${authUiTemplate.attributes['layout']},data-scheme=${authUiTemplate.attributes['scheme']},data-bg=${authUiTemplate.attributes['bg']},data-decoration=${authUiTemplate.attributes['decoration']},data-entrance=${authUiTemplate.attributes['entrance']},data-ambient=${authUiTemplate.attributes['ambient']},data-stagger=${authUiTemplate.attributes['stagger']},data-interactive=${authUiTemplate.attributes['interactive']},data-speed=${authUiTemplate.attributes['speed']}">
+    <div class="auth-backdrop" aria-hidden="true">
+      <span class="auth-blob auth-blob-1"></span><span class="auth-blob auth-blob-2"></span><span class="auth-blob auth-blob-3"></span>
+      <span class="auth-particles"></span>
+    </div>
+    <div class="auth-shell">
+      <aside class="auth-story" th:if="${authUiTemplate.split}">
+        <div class="auth-story-art" aria-hidden="true">
+          <span class="auth-orbit"><span></span><span></span><span></span></span>
+          <span class="auth-grid"></span>
+          <span class="auth-waves"><span></span><span></span></span>
+        </div>
+        <!-- Design slot: sanitised HTML replaces the default brand copy. -->
+        <div class="auth-story-content" th:if="${authUiTemplate.hasAside()}" th:utext="${authUiTemplate.asideHtml}"></div>
+        <th:block th:unless="${authUiTemplate.hasAside()}">
+          <span class="auth-site" th:text="${site.title}"></span>
+          <p class="auth-story-copy" th:text="${authUiView == 'signup' ? authUiTemplate.signupSlogan : authUiTemplate.loginSlogan}"></p>
+          <span class="auth-story-footer" th:text="${site.subtitle}"></span>
+        </th:block>
+      </aside>
+      <section class="auth-card" aria-labelledby="auth-title">
+        <div class="auth-slot auth-slot-header" th:if="${!#strings.isEmpty(authUiTemplate.headerHtml)}" th:utext="${authUiTemplate.headerHtml}"></div>
+        <header class="auth-heading">
+          <a class="auth-brand" href="/" aria-label="返回首页">
+            <img th:if="${!#strings.isEmpty(authUi.logo)}" th:src="${authUi.logo}" alt="" />
+            <span th:unless="${!#strings.isEmpty(authUi.logo)}" class="auth-monogram" th:text="${#strings.substring(site.title,0,1)}"></span>
+            <span th:text="${site.title}"></span>
+          </a>
+          <h1 id="auth-title" th:text="${authUiCopy.title}"></h1>
+          <p class="auth-lead" th:text="${authUiCopy.lead}"></p>
+        </header>
+
+        <div class="auth-forms" th:if="${authUiView == 'login'}">
+          <th:block th:replace="~{plugin:system:gateway_fragments/login::form}" />
+          <th:block th:replace="~{plugin:system:gateway_fragments/login::formAuthProviders}" />
+          <th:block th:replace="~{plugin:system:gateway_fragments/common::socialAuthProviders}" />
+        </div>
+        <div class="auth-forms" th:if="${authUiView == 'signup' and globalInfo.allowRegistration}">
+          <th:block th:replace="~{plugin:system:gateway_fragments/signup::form}" />
+        </div>
+        <p class="auth-closed" role="status" th:if="${authUiView == 'signup' and !globalInfo.allowRegistration}">当前未开放注册，请联系站长。</p>
+        <div class="auth-forms auth-logout" th:if="${authUiView == 'logout'}">
+          <th:block th:replace="~{plugin:system:gateway_fragments/logout::form}" />
+        </div>
+        <div class="auth-forms" th:if="${authUiView == 'password-reset-send'}">
+          <th:block th:replace="~{plugin:system:gateway_fragments/password_reset_email_send::form}" />
+          <th:block th:replace="~{plugin:system:gateway_fragments/common::passwordResetMethods}" />
+        </div>
+        <div class="auth-forms" th:if="${authUiView == 'password-reset-reset'}">
+          <th:block th:replace="~{plugin:system:gateway_fragments/password_reset_email_reset::form}" />
+        </div>
+        <div class="auth-forms" th:if="${authUiView == 'two-factor'}">
+          <th:block th:replace="~{plugin:system:gateway_fragments/totp::form}" />
+        </div>
+
+        <p class="auth-switch" th:if="${authUiView == 'login' and globalInfo.allowRegistration}">还没有账号？<a href="/signup">创建账号</a></p>
+        <p class="auth-switch" th:if="${authUiView == 'signup'}">已有账号？<a href="/login">前往登录</a></p>
+        <!-- After the reset email is sent, Halo's own form already offers the way back to login. -->
+        <p class="auth-switch" th:if="${(authUiView == 'password-reset-send' and sent != true) or authUiView == 'password-reset-reset' or authUiView == 'two-factor'}"><a href="/login">返回登录</a></p>
+
+        <div class="auth-slot auth-slot-footer" th:if="${!#strings.isEmpty(authUiTemplate.footerHtml)}" th:utext="${authUiTemplate.footerHtml}"></div>
+        <footer class="auth-footer">
+          <a class="auth-home" href="/">返回首页</a>
+        </footer>
+      </section>
+    </div>
+  </main>
+  <!-- Design JavaScript; only plugin managers can edit it. "</script" is escaped on the server. -->
+  <!-- type=text/plain keeps it inert; page.js runs it once AuthUI is available. -->
+  <script id="auth-ui-design-script" type="text/plain" th:if="${!#strings.isEmpty(authUiTemplate.js) and authUiPreview != true}" th:inline="none" th:utext="${authUiTemplate.js}"></script>
+</body>
+</html>

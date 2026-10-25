@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>已退出登录</title>
+  <!-- Inside the site modal this page is hidden behind the modal's own status; top level it redirects. -->
+  <style>html,body{margin:0;background:#fff}body{display:grid;place-items:center;min-height:100vh;font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:#687c79}</style>
+</head>
+<body>
+<p role="status">已退出登录，正在返回…</p>
+<script th:inline="javascript">
+  const target = /*[[${authUiTarget}]]*/ "/";
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: "auth-ui:logged-out" }, window.location.origin);
+  } else {
+    window.location.replace(target);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Auth UI Design"
+  short_description: "Design Halo login pages through the auth-ui MCP tools"
+  default_prompt: "Design a new login page for my Halo site"

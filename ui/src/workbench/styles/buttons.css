@@ -1,0 +1,106 @@
+/* Native actions and Halo buttons share the workbench palette. */
+.au-workbench .au-button,
+.au-workbench .au-text-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--au-border);
+  border-radius: 999px;
+  min-height: 36px;
+  padding: 7px 15px;
+  background: var(--au-bg);
+  color: var(--au-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 140ms,
+    opacity 140ms;
+}
+.au-workbench .au-button:hover:not(:disabled) {
+  background: var(--au-subtle);
+}
+.au-workbench .au-button.is-primary {
+  background: var(--au-text);
+  color: var(--au-bg);
+  border-color: var(--au-text);
+}
+.au-workbench .au-button.is-primary:hover:not(:disabled) {
+  background: var(--au-text);
+  opacity: 0.85;
+}
+.au-workbench .au-button.is-danger {
+  border-color: transparent;
+  background: transparent;
+  color: var(--au-danger);
+}
+.au-workbench .au-button.is-danger:hover:not(:disabled) {
+  background: var(--au-danger-bg);
+}
+.au-workbench .au-button.is-small {
+  min-height: 30px;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+.au-workbench .au-text-button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--au-muted);
+  padding: 7px 9px;
+}
+.au-workbench .au-text-button:hover:not(:disabled) {
+  color: var(--au-text);
+  background: var(--au-subtle);
+}
+.au-workbench :is(.au-button, .au-text-button):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.au-workbench .au-button.is-loading {
+  cursor: wait;
+}
+.au-workbench .au-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--au-muted);
+  cursor: pointer;
+}
+.au-workbench .au-icon-button:hover {
+  background: var(--au-subtle);
+  color: var(--au-text);
+}
+
+/* Halo buttons used inside the workbench and its dialogs. */
+:is(.au-workbench, .au-dialog) .btn {
+  --au-button-bg: var(--au-bg);
+  --au-button-color: var(--au-text);
+  --au-button-border: var(--au-border);
+  border: 1px solid var(--au-button-border);
+  border-radius: 999px;
+  min-height: 34px;
+  background-color: var(--au-button-bg) !important;
+  color: var(--au-button-color);
+  font-size: 12px;
+  box-shadow: none;
+}
+:is(.au-workbench, .au-dialog) .btn-primary,
+:is(.au-workbench, .au-dialog) .btn-secondary {
+  --au-button-bg: var(--au-text);
+  --au-button-color: var(--au-bg);
+  --au-button-border: var(--au-text);
+}
+:is(.au-workbench, .au-dialog) .btn .btn-icon {
+  color: inherit;
+}
+:is(.au-workbench, .au-dialog) .btn:not(:disabled):not(.btn-loading):hover {
+  opacity: 0.85;
+}
