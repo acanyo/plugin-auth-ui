@@ -22,8 +22,8 @@ spec:
   homepage: https://xhhao.com
   repo: https://github.com/acanyo/plugin-auth-ui
   issues: https://github.com/acanyo/plugin-auth-ui/issues
-  displayName: "认证界面"
-  description: "配置全站登录、注册页面与站内认证弹窗，沿用 Halo 原生认证流程。"
+  displayName: "登录工坊"
+  description: "无需修改主题，即可定制 Halo 登录、注册界面，支持站内弹窗、预设布局与品牌外观配置"
   # Settings are edited on the plugin's own console page (/console/auth-ui), not a Setting form.
   configMapName: auth-ui-config
   license:
