@@ -71,12 +71,8 @@ export interface TemplateCode {
 export interface AuthTemplateSpec {
   displayName: string
   description?: string
-  /** Layout from the first template version; new designs use `theme.layout`. */
-  layout?: 'centered' | 'split'
   loginSlogan?: string
   signupSlogan?: string
-  /** CSS from the first template version; new designs use `code.css`. */
-  css?: string
   theme?: TemplateTheme
   slots?: TemplateSlots
   code?: TemplateCode

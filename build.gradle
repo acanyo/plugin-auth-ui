@@ -56,6 +56,13 @@ tasks.named('processResources', ProcessResources) {
     from('.agents/skills/auth-ui-design/SKILL.md') {
         into 'mcp/skill'
     }
+    // Apache-2.0 asks for the license and notices to travel with the distributed jar.
+    from(fileTree(projectDir) { include 'LICENSE', 'NOTICE' }) {
+        into 'META-INF'
+    }
+    from(layout.projectDirectory.dir('licenses')) {
+        into 'META-INF/licenses'
+    }
 }
 
 tasks.register('processUiResources', Copy) {

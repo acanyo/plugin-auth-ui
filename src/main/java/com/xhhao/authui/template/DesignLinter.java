@@ -34,7 +34,7 @@ public final class DesignLinter {
             return warnings;
         }
         theme(spec.getTheme(), warnings::add);
-        var split = ThemeCompiler.attributes(spec.getTheme(), spec.getLayout()).get("layout").startsWith("split");
+        var split = ThemeCompiler.attributes(spec.getTheme()).get("layout").startsWith("split");
         var slots = spec.getSlots();
         if (slots != null) {
             if (!split && notBlank(slots.getAside())) {
@@ -47,10 +47,6 @@ public final class DesignLinter {
         if (!split && (notBlank(spec.getLoginSlogan()) || notBlank(spec.getSignupSlogan()))) {
             warnings.add("loginSlogan and signupSlogan are only shown on the brand panel of split layouts.");
         }
-        if (notBlank(spec.getCss())) {
-            warnings.add("css is kept for older designs; put new CSS in code.css.");
-        }
-        css("css", spec.getCss(), warnings::add);
         var code = spec.getCode();
         if (code != null) {
             css("code.css", code.getCss(), warnings::add);

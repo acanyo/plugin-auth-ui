@@ -44,19 +44,11 @@ public class AuthTemplate extends AbstractExtension {
         @Schema(maxLength = 200)
         private String description;
 
-        /** Shows the brand panel beside the form on wide screens. Kept for older designs. */
-        @Schema(allowableValues = {"centered", "split"})
-        private String layout = "centered";
-
         @Schema(description = "Text on the brand panel for the login page (split layout).", maxLength = 80)
         private String loginSlogan;
 
         @Schema(description = "Text on the brand panel for the signup page (split layout).", maxLength = 80)
         private String signupSlogan;
-
-        /** Free CSS kept from the first template version; new designs use {@code code.css}. */
-        @Schema(description = "CSS for this template, scoped to #auth-ui when rendered.", maxLength = 20000)
-        private String css;
 
         private Theme theme;
 

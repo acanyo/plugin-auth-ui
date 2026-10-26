@@ -100,3 +100,11 @@ pnpm dev
 ## 许可证
 
 [GPL-3.0](./LICENSE) © Handsome
+
+### 第三方许可
+
+| 作品 | 用途 | 许可证 |
+| --- | --- | --- |
+| [Remix Icon 4.8.0](https://github.com/Remix-Design/RemixIcon/tree/v4.8.0) | 后台界面图标；插件 Logo 基于其中的 `shield-user-line` 图标 | [Apache-2.0](./licenses/RemixIcon-4.8.0-Apache-2.0.txt) |
+
+完整声明见 [NOTICE](./NOTICE)。Remix Icon 自 4.9.0 起改用不允许作为 Logo 的新许可证，因此 `@iconify-json/ri` 固定为 1.2.10（Remix Icon 4.8.0），升级前请先确认许可证。

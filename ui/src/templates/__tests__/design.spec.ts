@@ -12,13 +12,6 @@ describe('normalizeDesign', () => {
     expect(design.code).toEqual({})
   })
 
-  it('moves first-version fields into the new structure', () => {
-    const design = normalizeDesign({ displayName: '旧模板', layout: 'split', css: ':root{--auth-primary:#111}' })
-    expect(design.theme?.layout).toBe('split')
-    expect(design.code?.css).toBe(':root{--auth-primary:#111}')
-    expect(design.css).toBeUndefined()
-  })
-
   it('does not share objects with the source', () => {
     const source = { displayName: 'a', theme: { primary: '#111' } }
     const design = normalizeDesign(source)

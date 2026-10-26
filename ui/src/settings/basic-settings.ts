@@ -12,15 +12,12 @@ const GROUP = 'basic'
 
 export const DEFAULT_SETTINGS: BasicSettings = { logo: '', displayMode: 'modal' }
 
-/** Reads the `basic` group, including values written by earlier plugin versions. */
+/** Reads the `basic` group; missing or unknown values fall back to the defaults. */
 export function parseBasicSettings(config: Record<string, Record<string, unknown> | undefined>): BasicSettings {
   const basic = config[GROUP] ?? {}
-  const legacyLogo = config.brand?.logo
-  const logo = typeof basic.logo === 'string' && basic.logo ? basic.logo
-    : typeof legacyLogo === 'string' ? legacyLogo : ''
-  const legacyMode: DisplayMode = basic.modalEnabled === false ? 'page' : 'modal'
+  const logo = typeof basic.logo === 'string' ? basic.logo : DEFAULT_SETTINGS.logo
   const displayMode = basic.displayMode === 'page' || basic.displayMode === 'modal'
-    ? basic.displayMode : legacyMode
+    ? basic.displayMode : DEFAULT_SETTINGS.displayMode
   return { logo, displayMode }
 }
 

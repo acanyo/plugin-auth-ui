@@ -13,14 +13,11 @@ export const THEME_DEFAULTS = {
   formWidth: 380,
 } as const
 
-/**
- * A complete, editable copy of a design: every nested group exists so the studio can bind to it,
- * and the layout of first-version templates moves into `theme.layout`.
- */
+/** A complete, editable copy of a design: every nested group exists so the studio can bind to it. */
 export function normalizeDesign(spec: AuthTemplateSpec): TemplateDraft {
   const copy: TemplateDraft = structuredClone(toPlain(spec))
   const theme: TemplateTheme = copy.theme ?? {}
-  theme.layout ??= (copy.layout === 'split' ? 'split' : 'centered') as TemplateLayout
+  theme.layout ??= 'centered'
   theme.background ??= {}
   theme.brand ??= {}
   theme.motion ??= {}
@@ -28,12 +25,6 @@ export function normalizeDesign(spec: AuthTemplateSpec): TemplateDraft {
   copy.theme = theme
   copy.slots ??= {}
   copy.code ??= {}
-  // Keep CSS from the first version editable in one place.
-  if (copy.css && !copy.code.css) {
-    copy.code.css = copy.css
-  }
-  delete copy.css
-  copy.layout = theme.layout === 'split' || theme.layout === 'split-reverse' ? 'split' : 'centered'
   return copy
 }
 

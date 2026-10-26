@@ -14,12 +14,6 @@ describe('parseBasicSettings', () => {
     })
   })
 
-  it('keeps values from earlier versions', () => {
-    expect(
-      parseBasicSettings({ basic: { modalEnabled: false }, brand: { logo: '/upload/old.png' } }),
-    ).toEqual({ logo: '/upload/old.png', displayMode: 'page' })
-  })
-
   it('ignores unknown display modes', () => {
     expect(parseBasicSettings({ basic: { displayMode: 'popup' } }).displayMode).toBe('modal')
   })

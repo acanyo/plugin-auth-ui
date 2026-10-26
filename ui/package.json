@@ -23,7 +23,7 @@
   "devDependencies": {
     "@formkit/core": "2.1.2",
     "@halo-dev/ui-plugin-bundler-kit": "^2.27.0",
-    "@iconify-json/ri": "^1.2.10",
+    "@iconify-json/ri": "1.2.10",
     "@tsconfig/node24": "^24.0.4",
     "@types/jsdom": "^28.0.3",
     "@types/node": "^24.13.3",

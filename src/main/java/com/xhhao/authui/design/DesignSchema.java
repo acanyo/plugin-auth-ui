@@ -26,14 +26,14 @@ public final class DesignSchema {
     }
 
     /**
-     * The fields an AI assistant may change: no deprecated fields or gallery order, and no
-     * JavaScript unless the user allowed it.
+     * The fields an AI assistant may change: no gallery order, and no JavaScript unless the user
+     * allowed it.
      */
     public static Map<String, Object> forAssistant(boolean allowScript) {
         var schema = spec(false, allowScript);
         @SuppressWarnings("unchecked")
         var properties = new LinkedHashMap<>((Map<String, Object>) schema.get("properties"));
-        properties.keySet().removeAll(Set.of("css", "layout", "priority"));
+        properties.remove("priority");
         schema.put("properties", properties);
         return schema;
     }
@@ -59,8 +59,6 @@ public final class DesignSchema {
                 + " Use the AuthUI API; errors are caught.", 0, 50000));
         }
         properties.put("code", object("Free code for anything the theme does not cover.", code));
-        properties.put("css", string("Deprecated: CSS of first-version designs. Use code.css.", 0, 20000));
-        properties.put("layout", enumOf("Deprecated: use theme.layout.", Set.of("centered", "split")));
         var schema = object("A login page design.", properties);
         if (requireName) {
             schema.put("required", List.of("displayName"));

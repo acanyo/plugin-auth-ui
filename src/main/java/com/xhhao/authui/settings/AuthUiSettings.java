@@ -27,10 +27,8 @@ public final class AuthUiSettings {
     public static AuthUiSettings from(Map<String, JsonNode> groups) {
         var settings = new AuthUiSettings();
         var basic = groups.get("basic");
-        // Earlier versions stored the logo under "brand" and a boolean modal switch.
-        settings.logo = SafeUrl.of(text(basic, "logo", text(groups.get("brand"), "logo", "")));
-        var legacyMode = bool(basic, "modalEnabled", true) ? MODAL : PAGE;
-        var mode = text(basic, "displayMode", legacyMode);
+        settings.logo = SafeUrl.of(text(basic, "logo", ""));
+        var mode = text(basic, "displayMode", MODAL);
         settings.displayMode = Set.of(MODAL, PAGE).contains(mode) ? mode : MODAL;
         settings.templateName = text(groups.get("template"), "name", "");
         return settings;
@@ -52,10 +50,5 @@ public final class AuthUiSettings {
         var value = group == null ? null : group.get(key);
         return value == null || !value.isString() || value.asString().isEmpty()
             ? fallback : value.asString();
-    }
-
-    private static boolean bool(JsonNode group, String key, boolean fallback) {
-        var value = group == null ? null : group.get(key);
-        return value == null || !value.isBoolean() ? fallback : value.asBoolean();
     }
 }

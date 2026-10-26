@@ -15,22 +15,21 @@ public record RenderedTemplate(String name, Map<String, String> attributes, Stri
                                String headerHtml, String footerHtml, String css, String js) {
     /** The plugin's own look from {@code auth/page.css}, used without a template. */
     public static final RenderedTemplate BASE = new RenderedTemplate("",
-        ThemeCompiler.attributes(null, "centered"), "", "", "", "", "", "", "", "");
+        ThemeCompiler.attributes(null), "", "", "", "", "", "", "", "");
 
     public static RenderedTemplate from(AuthTemplate template) {
         var spec = template.getSpec();
         var slots = spec.getSlots();
         var code = spec.getCode();
-        // Designs from the first version kept their CSS in spec.css; both are applied.
-        var css = CssScoper.scope(spec.getCss()) + CssScoper.scope(code != null ? code.getCss() : null);
         return new RenderedTemplate(template.getMetadata().getName(),
-            ThemeCompiler.attributes(spec.getTheme(), spec.getLayout()),
+            ThemeCompiler.attributes(spec.getTheme()),
             ThemeCompiler.variables(spec.getTheme()),
             text(spec.getLoginSlogan()), text(spec.getSignupSlogan()),
             SlotSanitizer.clean(slots != null ? slots.getAside() : null),
             SlotSanitizer.clean(slots != null ? slots.getHeader() : null),
             SlotSanitizer.clean(slots != null ? slots.getFooter() : null),
-            css, ScriptGuard.prepare(code != null ? code.getJs() : null));
+            CssScoper.scope(code != null ? code.getCss() : null),
+            ScriptGuard.prepare(code != null ? code.getJs() : null));
     }
 
     public String layout() {

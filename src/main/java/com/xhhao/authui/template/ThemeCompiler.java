@@ -83,11 +83,9 @@ public final class ThemeCompiler {
     }
 
     /** Data attributes that select layout, background and animation rules in page.css. */
-    public static Map<String, String> attributes(AuthTemplate.Theme theme, String legacyLayout) {
+    public static Map<String, String> attributes(AuthTemplate.Theme theme) {
         var attrs = new LinkedHashMap<String, String>();
-        var layout = theme != null ? theme.getLayout() : null;
-        attrs.put("layout", choice(layout, LAYOUTS,
-            "split".equals(legacyLayout) ? "split" : "centered"));
+        attrs.put("layout", choice(theme != null ? theme.getLayout() : null, LAYOUTS, "centered"));
         attrs.put("scheme", choice(theme != null ? theme.getColorScheme() : null, SCHEMES, "light"));
         var background = theme != null ? theme.getBackground() : null;
         attrs.put("bg", choice(background != null ? background.getType() : null, BACKGROUNDS, "default"));
