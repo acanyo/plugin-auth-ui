@@ -147,6 +147,9 @@
     body.className = 'body';
     frame = document.createElement('iframe');
     frame.title = '账号登录、注册与退出';
+    // The frame always matches its content height and the dialog body scrolls instead; without
+    // this, a page briefly taller or wider than the frame flashes scrollbars while it loads.
+    frame.setAttribute('scrolling', 'no');
     // Covers the iframe while it loads and after success, so callback pages are never shown.
     const status = document.createElement('div');
     status.className = 'status';

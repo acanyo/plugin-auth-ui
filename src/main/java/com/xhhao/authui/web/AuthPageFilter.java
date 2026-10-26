@@ -134,6 +134,7 @@ public class AuthPageFilter implements AfterSecurityWebFilter {
         return renderer.write(exchange, signedIn(exchange).flatMap(authenticated -> authenticated
             ? RenderingResponse.create("plugin:auth-ui:complete")
                 .header("Cache-Control", "no-store")
+                .modelAttribute(HaloInjection.EXCLUDE, true)
                 .modelAttribute("authUiTarget", target).build().cast(ServerResponse.class)
             : ServerResponse.temporaryRedirect(URI.create("/login")).build()));
     }
@@ -143,6 +144,7 @@ public class AuthPageFilter implements AfterSecurityWebFilter {
         var target = ReturnTarget.safe(exchange.getRequest().getQueryParams().getFirst("target"));
         return renderer.write(exchange, RenderingResponse.create("plugin:auth-ui:logged-out")
             .header("Cache-Control", "no-store")
+            .modelAttribute(HaloInjection.EXCLUDE, true)
             .modelAttribute("authUiTarget", target).build().cast(ServerResponse.class));
     }
 

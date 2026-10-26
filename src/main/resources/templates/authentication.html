@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow" />
   <title th:text="${authUiCopy.title + ' - ' + site.title}">账号</title>
   <th:block th:replace="~{plugin:system:gateway_fragments/common::basicScriptResources}" />
-  <link rel="stylesheet" href="/plugins/auth-ui/assets/auth/page.css?v=10" />
+  <link rel="stylesheet" href="/plugins/auth-ui/assets/auth/page.css?v=11" />
   <!-- Design values are validated on the server; design CSS is scoped to #auth-ui with "<" escaped. -->
   <style id="auth-ui-theme" th:if="${!#strings.isEmpty(authUiTemplate.variables)}" th:utext="${'#auth-ui{' + authUiTemplate.variables + '}'}"></style>
   <style id="auth-ui-template" th:if="${!#strings.isEmpty(authUiTemplate.css)}" th:utext="${authUiTemplate.css}"></style>

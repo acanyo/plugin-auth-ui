@@ -20,7 +20,7 @@ public class AuthUiHeadProcessor implements TemplateHeadProcessor {
         return settings.get().doOnNext(value -> {
             if (value.isModalEnabled()) {
                 model.add(context.getModelFactory().createText(
-                    "<script defer src=\"/plugins/auth-ui/assets/auth/modal.js?v=11\"></script>"));
+                    "<script defer src=\"/plugins/auth-ui/assets/auth/modal.js?v=12\"></script>"));
             }
         }).then();
     }

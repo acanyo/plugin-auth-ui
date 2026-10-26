@@ -101,6 +101,7 @@ public class AuthPageRenderer {
         model.put("authUiPreview", options.preview());
         model.put("authUiAutoSubmit", options.autoSubmit());
         model.put("_templateId", TEMPLATE);
+        model.put(HaloInjection.EXCLUDE, true);
         return RenderingResponse.create(TEMPLATE)
             .status(response.statusCode()).headers(response.headers())
             .cookies(cookies -> cookies.addAll(response.cookies()))
