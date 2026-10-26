@@ -12,6 +12,15 @@
   const isFormPage = path => isAuthPage(path) || path === '/challenges/two-factor/totp';
   let dialog, frame, host, opener, target, scrollStyle;
   let originalUrl;
+  // Themes often move body elements while booting, which drops a dialog out of the top layer;
+  // put the dialog back on top if the host is moved later.
+  const topLayer = new MutationObserver(() => {
+    if (dialog?.open && host.isConnected && !dialog.matches(':modal')) {
+      dialog.close();
+      dialog.showModal();
+      dialog.focus({ preventScroll: true });
+    }
+  });
 
   function localTarget(value) {
     if (!value) return null;
@@ -188,6 +197,7 @@
     });
     shadow.append(style, dialog);
     document.body.append(host);
+    topLayer.observe(document.body, { childList: true });
     const viewport = () => dialog.style.setProperty('--auth-viewport', `${window.visualViewport?.height || innerHeight}px`);
     viewport();
     window.visualViewport?.addEventListener('resize', viewport);
@@ -204,7 +214,8 @@
     const url = new URL(value, location.origin);
     if (url.origin !== location.origin || !isAuthPage(url.pathname)) return false;
     if (!document.body || typeof HTMLDialogElement === 'undefined') { location.assign(fullPage(url.href)); return true; }
-    if (!dialog) mount();
+    // PJAX libraries that swap the whole body (e.g. Turbo) take the modal with it; mount again.
+    if (!host?.isConnected) mount();
     if (!dialog.open) {
       opener = document.activeElement;
       scrollStyle = { overflow: document.body.style.overflow, paddingRight: document.body.style.paddingRight };
@@ -280,15 +291,18 @@
     if (type === 'auth-ui:success') succeed('登录成功');
     if (type === 'auth-ui:logged-out') succeed('已退出登录');
   });
-  document.addEventListener('click', event => {
+  // Listen while capturing on window, so auth links are handled before PJAX navigation (Swup,
+  // pjax, jquery-pjax, Turbo) sees the click; Swup ignores defaultPrevented, so stop the event too.
+  window.addEventListener('click', event => {
     if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     const link = event.composedPath().find(node => node instanceof HTMLAnchorElement);
     if (!link || link.hasAttribute('download') || (link.target && link.target.toLowerCase() !== '_self') || link.relList.contains('external')) return;
     const url = new URL(link.href, location.origin);
     if (url.origin !== location.origin || !isAuthPage(url.pathname)) return;
     event.preventDefault();
+    event.stopPropagation();
     openUrl(url.href);
-  });
+  }, true);
   window.HaloAuthUI = Object.freeze({
     openLogin(options = {}) {
       const url = new URL('/login', location.origin);
@@ -316,15 +330,7 @@
     history.replaceState(history.state, '', location.pathname + location.search);
     openUrl(requested);
   }
-  // Themes often move body elements while booting, which drops a dialog out of the top layer.
-  // Open after load, and put the dialog back on top if the host is moved later.
+  // Open after load, once themes have finished moving body elements around.
   if (document.readyState === 'complete') openFromFragment();
   else window.addEventListener('load', openFromFragment, { once: true });
-  new MutationObserver(() => {
-    if (dialog?.open && host.isConnected && !dialog.matches(':modal')) {
-      dialog.close();
-      dialog.showModal();
-      dialog.focus({ preventScroll: true });
-    }
-  }).observe(document.body || document.documentElement, { childList: true });
 })();
